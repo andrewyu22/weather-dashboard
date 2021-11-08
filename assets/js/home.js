@@ -14,6 +14,7 @@ function searchCity(event, city) {
                     .then(function(data) {
                         saveHistory(city);
                         displayWeather(data.coord.lon, data.coord.lat);
+                        SearchHistoryButton(city);
                         $("#city").val("");
                         // var weatherEl = document.createElement("h2");
                         // weatherEl.textContent = data.weather[0].main;
