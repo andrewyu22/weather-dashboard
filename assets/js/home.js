@@ -97,13 +97,15 @@ function forecastWeather(daily) {
         cardImgEl.alt = "weather-icon";
         cardImgEl.width = "100";
         cardImgEl.height = "100";
+        var cardDescEl = document.createElement("h4");
+        cardDescEl.textContent = daily[i].weather[0].description;
         var cardTempEl = document.createElement("h3");
         cardTempEl.textContent = "Temp: " + daily[i].temp.day + " °F";
         var cardWindEl = document.createElement("h3");
         cardWindEl.textContent = "Wind: " + daily[i].wind_speed + " MPH";
         var cardHumidityEl = document.createElement("h3");
         cardHumidityEl.textContent = "Humidity: " + daily[i].humidity + " %";
-        cardEl.append(cardDateEl, cardImgEl, cardTempEl, cardWindEl, cardHumidityEl);
+        cardEl.append(cardDateEl, cardImgEl, cardDescEl, cardTempEl, cardWindEl, cardHumidityEl);
         cardContainerEl.append(cardEl);
         weatherEl.append(cardContainerEl);
     }
