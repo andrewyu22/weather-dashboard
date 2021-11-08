@@ -1,10 +1,10 @@
 var weatherEl = $("#weather-container");
+var historyEl = $("#history");
 var apiKey = "aa630346e91a6441f826ab5f7a6be4a5";
+var searchHistory = [];
 
-function click(event) {
+function searchCity(event, city) {
     event.preventDefault();
-    var city = $("#city").val().trim();
-    $("#weather-search").text(city);
     var apiURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
 
     fetch(apiURL)
@@ -12,8 +12,9 @@ function click(event) {
             if (response.ok) {
                 response.json()
                     .then(function(data) {
+                        saveHistory(city);
                         displayWeather(data.coord.lon, data.coord.lat);
-
+                        $("#city").val("");
                         // var weatherEl = document.createElement("h2");
                         // weatherEl.textContent = data.weather[0].main;
                         // weather.append(weatherEl);
@@ -81,25 +82,66 @@ function currentWeather(current) {
 function forecastWeather(daily) {
     var cardContainerEl = document.createElement("div");
     cardContainerEl.className = "d-flex flex-row flex-wrap justify-content-between mt-3";
+    var cardTitleEl = document.createElement("h1");
+    cardTitleEl.textContent = "Five Day Forecast: ";
+    weatherEl.append(cardTitleEl);
     for (var i = 0; i < 5; i++) {
         var iconURL = "https://openweathermap.org/img/wn/" + daily[i].weather[0].icon + ".png"
         var cardEl = document.createElement("div");
-        cardEl.className = "card text-center";
-        var cardTilleEl = document.createElement("h3");
-        cardTilleEl.textContent = moment().add((i + 1), 'd').format("MM/DD/YY");
+        cardEl.className = "card text-center align-items-center p-3";
+        var cardDateEl = document.createElement("h3");
+        cardDateEl.textContent = moment().add((i + 1), 'd').format("MM/DD/YY");
         var cardImgEl = document.createElement("img");
         cardImgEl.src = iconURL;
         cardImgEl.alt = "weather-icon";
+        cardImgEl.width = "100";
+        cardImgEl.height = "100";
         var cardTempEl = document.createElement("h3");
         cardTempEl.textContent = "Temp: " + daily[i].temp.day + " °F";
         var cardWindEl = document.createElement("h3");
         cardWindEl.textContent = "Wind: " + daily[i].wind_speed + " MPH";
         var cardHumidityEl = document.createElement("h3");
         cardHumidityEl.textContent = "Humidity: " + daily[i].humidity + " %";
-        cardEl.append(cardTilleEl, cardImgEl, cardTempEl, cardWindEl, cardHumidityEl);
+        cardEl.append(cardDateEl, cardImgEl, cardTempEl, cardWindEl, cardHumidityEl);
         cardContainerEl.append(cardEl);
         weatherEl.append(cardContainerEl);
     }
 }
 
-$(".btn").on("click", click);
+function saveHistory(city) {
+    searchHistory.push(city);
+    localStorage.setItem("search", JSON.stringify(searchHistory));
+}
+
+function getHistory() {
+    var history = localStorage.getItem("search");
+    history = JSON.parse(history);
+    for (x in history) {
+        searchHistory.push(history[x]);
+        SearchHistoryButton(history[x]);
+    }
+}
+
+function SearchHistoryButton(cityName) {
+    var buttonEl = document.createElement("button");
+    buttonEl.className = "btn btn-success w-75 m-1";
+    buttonEl.textContent = cityName;
+    buttonEl.setAttribute("data-search", cityName);
+    historyEl.append(buttonEl);
+}
+
+function clearHistory() {
+    localStorage.clear();
+    location.reload();
+}
+
+$(document).on("click", ".btn", function() {
+    var city = $("#city").val().trim();
+    if (city === null || city === "") {
+        city = $(this).attr("data-search");
+    }
+    $("#weather-search").text(city);
+    searchCity(event, city);
+});
+
+getHistory();
