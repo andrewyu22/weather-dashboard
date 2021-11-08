@@ -54,3 +54,18 @@ header {
     border: 2px solid var(--light-dark);
     border-radius: var(--border-radius);
 }
+
+.favorable {
+    background-color: rgb(144, 238, 144);
+    display: block;
+}
+
+.moderate {
+    background-color: yellow;
+    display: block;
+}
+
+.severe {
+    background-color: red;
+    display: block;
+}
