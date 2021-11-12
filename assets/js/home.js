@@ -14,11 +14,7 @@ function searchCity(event, city) {
                     .then(function(data) {
                         saveHistory(city);
                         displayWeather(data.coord.lon, data.coord.lat);
-                        SearchHistoryButton(city);
                         $("#city").val("");
-                        // var weatherEl = document.createElement("h2");
-                        // weatherEl.textContent = data.weather[0].main;
-                        // weather.append(weatherEl);
                     })
             } else {
                 alert("Error: " + response.statusText);
@@ -112,7 +108,9 @@ function forecastWeather(daily) {
 }
 
 function saveHistory(city) {
-    searchHistory.push(city);
+    if (!(searchHistory.indexOf(city) > -1)) {
+        searchHistory.push(city);
+    }
     localStorage.setItem("search", JSON.stringify(searchHistory));
 }
 
@@ -142,6 +140,9 @@ $(document).on("click", ".btn", function() {
     var city = $("#city").val().trim();
     if (city === null || city === "") {
         city = $(this).attr("data-search");
+    }
+    if (!(searchHistory.indexOf(city) > -1)) {
+        SearchHistoryButton(city);
     }
     $("#weather-search").text(city);
     searchCity(event, city);
