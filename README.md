@@ -29,4 +29,4 @@ Link: https://andrewyu22.github.io/weather-dashboard/
 
 Credits to https://openweathermap.org/api 
 
-![weatherAPI](assets/images/weatherAPI.JPG)
+![weatherAPI](assets/images/weatherApi.JPG)
